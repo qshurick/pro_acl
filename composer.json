@@ -1,0 +1,21 @@
+{
+    "name": "qshurick/pro_acl",
+    "description": "Simple ACL module",
+    "authors": [
+        {
+            "name": "qshurick",
+            "email": "shu.rick.ifmo@gmail.com"
+        }
+    ],
+    "require": {
+        "qshurick/pro_log": "dev-master",
+        "qshurick/pro_core": "dev-master",
+        "zendframework/zendframework1": "1.12.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "Pro_": "library/",
+            "Pro_Resource_": "library/Pro/Resource"
+        }
+    }
+}
