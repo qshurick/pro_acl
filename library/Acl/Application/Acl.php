@@ -8,8 +8,8 @@
 
 class Acl_Application_Acl extends Zend_Acl {
     const GUEST = 'guest';
-    const REGISTER_ALIAS = "acl-acl";
-    const SESSION_ALIAS = "acl-acl";
+    const REGISTER_ALIAS = "acl";
+    const SESSION_ALIAS = "acl";
 
     static protected $_instance;
     protected $_role;
@@ -38,10 +38,10 @@ class Acl_Application_Acl extends Zend_Acl {
     private function init() {
         $availableRoles = array();
 
-        $table = new Acl_Application_Db_AclRoles();
+        $table = new Acl_Application_Db_Acl();
         $roles = $table->fetchAll();
 
-        $table = new Acl_Application_Db_AclHierarchy();
+        $table = new Acl_Application_Db_AclHie();
         $hie = $table->fetchAll();
 
         $this->ensureRoles($roles, $hie, $availableRoles);
