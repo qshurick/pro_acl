@@ -46,8 +46,8 @@ class Acl_Application_Acl extends Zend_Acl {
         $hie = $table->fetchAll();
 //        $hie = $db->getHie();
 
-        Zend_Debug::dump($roles);
-        Zend_Debug::dump($hie);
+        Zend_Debug::dump($roles->toArray());
+        Zend_Debug::dump($hie->toArray());
 
 //        $this->ensureRoles($roles, $hie, $availableRoles);
 //        $this->setCurrentRole(self::GUEST);
