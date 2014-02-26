@@ -7,7 +7,7 @@
  */
 
 class Acl_Application_Acl extends Zend_Acl {
-    const GUEST = 1;
+    const GUEST = 'guest';
     const REGISTER_ALIAS = "acl-acl";
     const SESSION_ALIAS = "acl-acl";
 
@@ -40,20 +40,15 @@ class Acl_Application_Acl extends Zend_Acl {
 
         $table = new Acl_Application_Db_AclRoles();
         $roles = $table->fetchAll();
-//        $roles = $db->getAllRoles();
 
         $table = new Acl_Application_Db_AclHierarchy();
         $hie = $table->fetchAll();
-//        $hie = $db->getHie();
 
-        Zend_Debug::dump($roles->toArray());
-        Zend_Debug::dump($hie->toArray());
-
-//        $this->ensureRoles($roles, $hie, $availableRoles);
-//        $this->setCurrentRole(self::GUEST);
+        $this->ensureRoles($roles, $hie, $availableRoles);
+        $this->setCurrentRole(self::GUEST);
     }
 
-    /*private function ensureRoles($roles, $hie, &$existed) {
+    private function ensureRoles($roles, $hie, &$existed) {
         $repeat = false;
         foreach($hie as $role) {
             if (!in_array($role['role'], $existed)) {
@@ -72,8 +67,7 @@ class Acl_Application_Acl extends Zend_Acl {
                     $parents = explode(",", $role['parents']);
                     if (0 == count($parents) || '' == $role['parents'])
                         $parents = null;
-                    Pro_Log::log("Creation role: '" . $role['role'] . "'", "acl");
-                    Zend_Registry::get('logger')->log("Creation role: '" . $role['role'] . "'", "acl");
+                    $this->logger->log("Creation role: '" . $role['role'] . "'", Zend_Log::DEBUG);
                     $this->addRole($role['role'], $parents);
                 }
             }
@@ -83,10 +77,9 @@ class Acl_Application_Acl extends Zend_Acl {
         foreach ($roles as $rolePrivileges) {
             $mode = $rolePrivileges['mode'];
             if (null == $mode) continue;
-            $resource = new Pro_Acl_Resource($rolePrivileges['resource']);
+            $resource = new Acl_Application_AclResource($rolePrivileges['resource']);
             if (!$this->has($resource)) {
-                Pro_Log::log("Creation resource '" . $resource->getResourceId(), "acl");
-                Zend_Registry::get('logger')->log("Creation resource '" . $resource->getResourceId(), "acl");
+                $this->logger->log("Creation resource '" . $resource->getResourceId(), Zend_Log::DEBUG);
                 $this->addResource($resource);
             }
             $privilege = '__full__' == $rolePrivileges['privilege'] || null  == $rolePrivileges['privilege']
@@ -104,24 +97,25 @@ class Acl_Application_Acl extends Zend_Acl {
     }
 
     public function setCurrentRole($role) {
-        Pro_Log::log("Current role changed: '" . $this->_role . "' > '" . $role . "'", "acl");
+        $this->logger->log("Current role changed: '" . $this->_role . "' > '" . $role . "'", Zend_Log::INFO);
         $this->_role = $role;
         $this->fixate();
     }
 
     public function setCurrentRoleByUserId($userId) {
-        $db = new Pro_Acl_Db();
-        $this->setCurrentRole($db->getUserRole($userId));
+        $table = new Acl_Application_Db_AclUser();
+        $role = $table->getByUserId($userId);
+        $this->setCurrentRole($role);
     }
 
     protected function fixate() {
-        $session = new Zend_Session_Namespace(self::$_sessionKey);
+        $session = new Zend_Session_Namespace(self::SESSION_ALIAS);
         $session->acl = serialize(self::$_instance);
     }
 
-    public function ensureRole($userId, $parents) {
-        $db = new Pro_Acl_Db();
-        $db->ensureRole($userId, null, $parents);
+    public function ensureRole($userId, $parents = array()) {
+        $table = new Acl_Application_Db_AclUser();
+        $table->ensureRole($userId, $parents);
     }
 
     public function getCurrentHierarchy() {
@@ -132,5 +126,5 @@ class Acl_Application_Acl extends Zend_Acl {
                 $hie[] = $role;
             }
         }
-    }*/
+    }
 }

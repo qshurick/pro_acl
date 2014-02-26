@@ -22,4 +22,14 @@ class Acl_Application_Db_AclHierarchy extends Pro_Db_Table {
         ),
     );
 
+    public function ensureParents($roleId, $parents = array()) {
+        if (!empty($parents)) {
+            foreach ($parents as $parentRoleId) {
+                $this->insert(array(
+                    'role_id' => $roleId,
+                    'parent_role_id' => $parentRoleId,
+                ));
+            }
+        }
+    }
 }
