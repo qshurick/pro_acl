@@ -13,7 +13,9 @@ class Acl_Application_Resource_Acl extends Zend_Application_Resource_ResourceAbs
      * @return mixed
      */
     public function init() {
-        // TODO: Implement init() method.
+        $this->getBootstrap()->bootstrap('logger');
+        $acl = Acl_Application_Acl::getInstance();
+        Zend_Registry::set(Acl_Application_Acl::REGISTER_ALIAS, $acl);
     }
 
 }
