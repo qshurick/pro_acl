@@ -8,6 +8,7 @@
 
 class Acl_Application_Db_AclHierarchy extends Pro_Db_Table {
     protected $_name = "acl_hierarchy";
+    protected $_primary = array("role_id", "parent_role_id");
     protected $_referenceMap = array(
         "Role" => array(
             "columns" => "role_id",
