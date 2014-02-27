@@ -184,7 +184,7 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`demo3-db`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `acl_hie` AS select aa.id, aa.code, group_concat(ar.code) from acl_roles aa left join acl_hierarchy on aa.id = role_id left join acl_roles ar on ar.id = parent_role_id group by aa.id; */;
+/*!50001 VIEW `acl_hie` AS select aa.id, aa.code as `role`, group_concat(ar.code) as `parents` from acl_roles aa left join acl_hierarchy on aa.id = role_id left join acl_roles ar on ar.id = parent_role_id group by aa.id; */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
