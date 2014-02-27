@@ -13,11 +13,8 @@ class Acl_Application_Acl extends Zend_Acl {
 
     static protected $_instance;
     protected $_role;
-    /** @var $logger Zend_Log */
-    protected $logger;
 
     protected function __construct() {
-        $this->logger = Zend_Registry::get('logger')->ensureStream('acl');
         $this->init();
         $this->getRoles();
     }
@@ -33,6 +30,13 @@ class Acl_Application_Acl extends Zend_Acl {
             }
         }
         return self::$_instance;
+    }
+
+    /**
+     * @return Zend_Log
+     */
+    protected function getLogger() {
+        return Zend_Registry::get('logger')->ensureStream('acl');
     }
 
     private function init() {
@@ -67,7 +71,7 @@ class Acl_Application_Acl extends Zend_Acl {
                     $parents = explode(",", $role['parents']);
                     if (0 == count($parents) || '' == $role['parents'])
                         $parents = null;
-                    $this->logger->log("Creation role: '" . $role['role'] . "'", Zend_Log::DEBUG);
+                    $this->getLogger()->log("Creation role: '" . $role['role'] . "'", Zend_Log::DEBUG);
                     $this->addRole($role['role'], $parents);
                 }
             }
@@ -79,7 +83,7 @@ class Acl_Application_Acl extends Zend_Acl {
             if (null == $mode) continue;
             $resource = new Acl_Application_AclResource($rolePrivileges['resource']);
             if (!$this->has($resource)) {
-                $this->logger->log("Creation resource '" . $resource->getResourceId(), Zend_Log::DEBUG);
+                $this->getLogger()->log("Creation resource '" . $resource->getResourceId(), Zend_Log::DEBUG);
                 $this->addResource($resource);
             }
             $privilege = '__full__' == $rolePrivileges['privilege'] || null  == $rolePrivileges['privilege']
@@ -97,7 +101,7 @@ class Acl_Application_Acl extends Zend_Acl {
     }
 
     public function setCurrentRole($role) {
-        $this->logger->log("Current role changed: '" . $this->_role . "' > '" . $role . "'", Zend_Log::INFO);
+        $this->getLogger()->log("Current role changed: '" . $this->_role . "' > '" . $role . "'", Zend_Log::INFO);
         $this->_role = $role;
         $this->fixate();
     }

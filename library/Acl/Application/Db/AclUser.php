@@ -8,6 +8,7 @@
 
 class Acl_Application_Db_AclUser extends Pro_Db_Table {
     protected $_name = "acl_user";
+    protected $_primary = array("role_id", "user_id");
     protected $_referenceMap = array(
         "Role" => array(
             "columns" => "role_id",
@@ -18,7 +19,7 @@ class Acl_Application_Db_AclUser extends Pro_Db_Table {
     public function getByUserId($userId) {
         $select = $this->select()->where('user_id = ?', $userId);
         $row = $this->fetchRow($select);
-        $role = $row->findParentRow("acl_roles");
+        $role = $row->findParentRow("Acl_Application_Db_AclRoles");
         return $role->code;
     }
     public function ensureRole($userId, $parents = array()) {
