@@ -126,5 +126,6 @@ class Acl_Application_Acl extends Zend_Acl {
                 $hie[] = $role;
             }
         }
+        return $hie;
     }
 }
